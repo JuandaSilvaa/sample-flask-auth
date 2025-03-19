@@ -16,9 +16,11 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 # Session <- conexão ativa
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
+
 
 @app.route('/login', methods=["POST"])
 def login():
@@ -37,12 +39,14 @@ def login():
 
     return jsonify({"massage": "Credenciais inválidas"}), 400
 
+
 @app.route('/logout', methods=["GET"])
 @login_required
 def logout():
     logout_user()
     return jsonify({"massage": "Logout realizado com sucesso!"})
-    
+
+
 @app.route('/user', methods=["POST"])
 def create_user():
     data = request.json
@@ -55,7 +59,7 @@ def create_user():
         db.session.add(user)
         db.session.commit()
         return jsonify({"massage": "Usuario cadastro com sucesso!"})
-    
+
     return jsonify({"massage": "Dados invalidos"}), 400
 
 
@@ -66,7 +70,7 @@ def read_user(id_user):
 
     if user:
         return {"username": user.username}
-    
+
     return jsonify({"massage": "Usuario não encontrado"}), 404
 
 
@@ -80,7 +84,8 @@ def update_user(id_user):
         return jsonify({"massage": "Operação não permitida"}), 403
 
     if user and data.get("password"):
-        user.password = data.get("password")
+        hashed_password = bcrypt.hashpw(str.encode( data.get("password")), bcrypt.gensalt())
+        user.password = hashed_password
         db.session.commit()
         return jsonify({"massage": f"Usuário {id_user} atualizado com sucesso"})
 
@@ -98,12 +103,13 @@ def delete_user(id_user):
     if id_user == current_user.id:
         return jsonify({"massage": "Deleção não permitida"}), 403
 
-    if user :
+    if user:
         db.session.delete(user)
         db.session.commit()
         return jsonify({"massage": f"Usuário {id_user} deletado com sucesso"})
-    
+
     return jsonify({"massage": "Usuario não encontrado"}), 404
+
 
 if __name__ == '__main__':
     app.run(debug=True)
