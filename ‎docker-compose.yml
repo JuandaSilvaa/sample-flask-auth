@@ -13,4 +13,4 @@ services:
        # Opens port 3306 on the container
        - '3306'
      volumes:
-       - C:/Users/juans/OneDrive/Documentos/curso_python/mysql:/var/lib/mysql
+       - /seu/diretorio/personalizado/mysql:/var/lib/mysql
