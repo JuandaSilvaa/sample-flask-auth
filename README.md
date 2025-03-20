@@ -86,7 +86,7 @@ sample-flask-auth/
 
 ## 🐳 Executando com Docker
 
-Se preferir, você pode rodar o projeto via **Docker**:
+Se preferir, você pode rodar o banco de dados via **Docker**:
 
 1. **Verifique e ajuste o arquivo `docker-compose.yml`**:
 
